@@ -18,17 +18,17 @@
 #define mp make_pair
 template<class ValueType> class Set {
 public:
-	struct node {
+	struct Node {
 		std::vector<size_t> sons;
 		std::vector<std::pair<ValueType, ValueType>> keys;
 		std::pair<ValueType, ValueType> val;
 		int p;
-		node() {
+		Node() {
 			p = -1;
 			sons.clear();
 			keys.clear();
 		}
-		node(const ValueType& x) {
+		Node(const ValueType& x) {
 			val = { x,x };
 			p = -1;
 			sons.clear();
@@ -284,7 +284,7 @@ public:
 		if (tree[v].sons.size() <= 3) {
 			return;
 		}
-		node nw = node();
+		Node nw = Node();
 		nw.sons = { tree[v].sons[2], tree[v].sons[3] };
 		nw.keys = { tree[v].keys[2], tree[v].keys[3] };
 		nw.p = tree[v].p;
@@ -324,7 +324,7 @@ public:
 		}
 	}
 	void insert(const ValueType& val) {
-		node nw = node(val);
+		Node nw = Node(val);
 		if (root == -1) {
 			++sz;
 			root = tree.size();
@@ -355,7 +355,7 @@ public:
 		else {
 			int p = tree[v].p;
 			tree[p].sons.pbc(tree.size());
-			tree.pbc(node(val));
+			tree.pbc(Node(val));
 			tree.back().p = p;
 			std::sort(all(tree[p].sons), [&](int x, int y) {
 				return tree[x].val < tree[y].val;
@@ -447,7 +447,7 @@ public:
 		}
 	}
 private:
-	std::vector<node> tree;
+	std::vector<Node> tree;
 	int root = -1;
 	size_t sz = 0;
 };
