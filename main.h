@@ -94,137 +94,134 @@ public:
 	friend class iterator;
 	class iterator {
 	public:
-		size_t v = 0;
+		size_t node_id = 0;
 		const Set<ValueType>* s;
 		iterator& operator=(const iterator& other) {
-			v = other.v, s = other.s;
+			node_id = other.v, s = other.s;
 			return *this;
 		}
-		iterator() {
-			v = 0;
-			s = nullptr;
-		}
+		iterator() : node_id(0), s(nullptr) {}
 		iterator(size_t u, const Set<ValueType>* t) {
-			v = u;
+			node_id = u;
 			s = t;
 		}
-		iterator(const iterator& other) : v(other.v), s(other.s) {}
+		iterator(const iterator& other) : node_id(other.node_id), s(other.s) {}
 		const ValueType* operator->()const {
-			return &(s->tree[v].val.first);
+			return &(s->tree[node_id].val.first);
 		}
 		iterator& operator++() {
-			while (v != s->root)
+			while (node_id != s->root)
 			{
-				size_t nw = s->tree[v].p;
-				size_t sonid = s->getson(nw, v);
-				if (sonid == s->tree[nw].sons.size() - 1) {
-					v = s->tree[v].p;
+				size_t nw = s->tree[node_id].p;
+				size_t son_id = s->getson(nw, node_id);
+				if (son_id == s->tree[nw].sons.size() - 1) {
+					node_id = s->tree[node_id].p;
 					continue;
 				}
 				break;
 			}
-			int nw = s->tree[v].p;
+			int nw = s->tree[node_id].p;
 			if (nw == -1) {
-				v = s->tree.size();
+				node_id = s->tree.size();
 				return *this;
 			}
-			size_t sonid = s->getson(nw, v);
-			++sonid;
-			v = s->tree[nw].sons[sonid];
-			while (s->tree[v].sons.size()) {
-				v = s->tree[v].sons[0];
+			size_t son_id = s->getson(nw, node_id);
+			++son_id;
+			node_id = s->tree[nw].sons[son_id];
+			while (s->tree[node_id].sons.size()) {
+				node_id = s->tree[node_id].sons[0];
 			}
 			return *this;
 		}
 		iterator& operator--() {
-			if (v == s->tree.size()) {
-				v = s->root;
-				while (s->tree[v].sons.size()) {
-					v = s->tree[v].sons.back();
+			if (node_id == s->tree.size()) {
+				node_id = s->root;
+				while (s->tree[node_id].sons.size()) {
+					node_id = s->tree[node_id].sons.back();
 				}
 				return *this;
 			}
-			while (v != s->root) {
-				size_t nw = s->tree[v].p;
-				size_t sonid = s->getson(nw, v);
-				if (sonid == 0) {
-					v = s->tree[v].p;
+			while (node_id != s->root) {
+				size_t nw = s->tree[node_id].p;
+				size_t son_id = s->getson(nw, node_id);
+				if (son_id == 0) {
+					node_id = s->tree[node_id].p;
 					continue;
 				}
 				break;
 			}
-			size_t nw = s->tree[v].p;
-			size_t sonid = s->getson(nw, v);
-			--sonid;
-			v = s->tree[nw].sons[sonid];
-			while (s->tree[v].sons.size()) {
-				v = s->tree[v].sons.back();
+			size_t nw = s->tree[node_id]p;
+			size_t son_id = s->getson(nw, node_id);
+			--son_id;
+			node_id = s->tree[nw].sons[son_id];
+			while (s->tree[node_id].sons.size()) {
+				node_id = s->tree[node_id].sons.back();
 			}
 			return *this;
 		}
 		iterator operator--(int) {
 			auto to_ret = *this;
-			if (v == s->tree.size()) {
-				v = s->root;
-				while (s->tree[v].sons.size()) {
-					v = s->tree[v].sons.back();
+			if (node_id == s->tree.size()) {
+				node_id = s->root;
+				while (s->tree[node_id].sons.size()) {
+					node_id = s->tree[node_id].sons.back();
 				}
 				return to_ret;
 			}
-			while (v != s->root) {
-				size_t nw = s->tree[v].p;
-				size_t sonid = s->getson(nw, v);
-				if (sonid == 0) {
-					v = s->tree[v].p;
+			while (node_id != s->root) {
+				size_t nw = s->tree[node_id].p;
+				size_t son_id = s->getson(nw, node_id);
+				if (son_id == 0) {
+					node_id = s->tree[node_id].p;
 					continue;
 				}
 				break;
 			}
-			size_t nw = s->tree[v].p;
-			size_t sonid = s->getson(nw, v);
-			--sonid;
-			v = s->tree[nw].sons[sonid];
-			while (s->tree[v].sons.size()) {
-				v = s->tree[v].sons.back();
+			size_t nw = s->tree[node_id].p;
+			size_t son_id = s->getson(nw, node_id;
+			--son_id;
+			node_id = s->tree[nw].sons[son_id];
+			while (s->tree[node_id].sons.size()) {
+				node_id = s->tree[node_id].sons.back();
 			}
 			return to_ret;
 		}
 		iterator operator++(int) {
 			auto to_ret = *this;
-			while (v != s->root) {
-				size_t nw = s->tree[v].p;
-				size_t sonid = s->getson(nw, v);
-				if (sonid == s->tree[nw].sons.size() - 1) {
-					v = s->tree[v].p;
+			while (node_id != s->root) {
+				size_t nw = s->tree[node_id].p;
+				size_t son_id = s->getson(nw, node_id);
+				if (son_id == s->tree[nw].sons.size() - 1) {
+					node_id = s->tree[node_id].p;
 					continue;
 				}
 				break;
 			}
-			int nw = s->tree[v].p;
+			int nw = s->tree[node_id].p;
 			if (nw == -1) {
-				v = s->tree.size();
+				node_id = s->tree.size();
 				return to_ret;
 			}
-			size_t sonid = s->getson(nw, v);
-			if (sonid == s->tree[nw].sons.size()) {
-				v = s->tree.size();
+			size_t son_id = s->getson(nw, node_id);
+			if (son_id == s->tree[nw].sons.size()) {
+				node_id = s->tree.size();
 				return to_ret;
 			}
-			++sonid;
-			v = s->tree[nw].sons[sonid];
-			while (s->tree[v].sons.size()) {
-				v = s->tree[v].sons[0];
+			++son_id;
+			node_id = s->tree[nw].sons[son_id];
+			while (s->tree[node_id].sons.size()) {
+				node_id = s->tree[node_id].sons[0];
 			}
 			return to_ret;
 		}
 		ValueType operator*() const {
-			return s->tree[v].val.first;
+			return s->tree[node_id].val.first;
 		}
 		bool operator==(const Set::iterator& a) const {
-			return v == a.v;
+			return node_id == a.node_id;
 		}
 		bool operator!=(const Set::iterator& a) const {
-			return v != a.v;
+			return node_id != a.node_id;
 		}
 	};
 	Set::iterator end() const {
@@ -235,8 +232,8 @@ public:
 			return end();
 		}
 		Set::iterator it(root, this);
-		while (tree[it.v].sons.size()) {
-			it.v = tree[it.v].sons[0];
+		while (tree[it.node_id].sons.size()) {
+			it.node_id = tree[it.node_id].sons[0];
 		}
 		return it;
 	}
@@ -336,7 +333,7 @@ public:
 			return;
 		}
 		++sz;
-		size_t v = it.v;
+		size_t v = it.node_id;
 		if (tree[v].p == -1) {
 			root = tree.size() - 1;
 			tree.pbc(nw);
@@ -398,12 +395,12 @@ public:
 		if (x == end()) {
 			return 0;
 		}
-		if (tree[x.v].p == -1) {
+		if (tree[x.node_id].p == -1) {
 			root = -1;
 			return 0;
 		}
-		int p = tree[x.v].p;
-		size_t v = x.v;
+		int p = tree[x.node_id].p;
+		size_t v = x.node_id;
 		if (tree[p].sons.size() == 3) {
 			tree[p].sons.erase(std::find(all(tree[p].sons), x.v));
 			recalc(p);
