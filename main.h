@@ -19,7 +19,7 @@
 template<class ValueType> class Set {
 public:
 	struct node {
-		std::vector<int> sons;
+		std::vector<size_t> sons;
 		std::vector<std::pair<ValueType, ValueType>> keys;
 		std::pair<ValueType, ValueType> val;
 		int p;
@@ -46,7 +46,9 @@ public:
 		sz = 0;
 	}
 	Set& operator=(const Set& a) {
-		if (&a == this) return *this;
+		if (&a == this) {
+			return *this;
+		}
 		tree = a.tree;
 		root = a.root;
 		sz = a.sz;
@@ -66,13 +68,15 @@ public:
 		}
 	}
 	int getson(int v, int son) const {
-		for (int j = 0; j < tree[v].sons.size(); ++j) {
+		for (size_t j = 0; j < tree[v].sons.size(); ++j) {
 			if (tree[v].sons[j] == son) return j;
 		}
 		assert(0);
 	}
 	void trecalc(int v) {
-		if (!tree[v].sons.size()) tree[v].keys = { tree[v].val };
+		if (!tree[v].sons.size()) {
+			tree[v].keys = { tree[v].val };
+		}
 		else {
 			tree[v].keys.resize(tree[v].sons.size());
 			for (int j = 0; j < tree[v].sons.size(); ++j) {
@@ -111,8 +115,8 @@ public:
 		iterator& operator++() {
 			while (v != s->root)
 			{
-				int nw = s->tree[v].p;
-				int sonid = s->getson(nw, v);
+				size_t nw = s->tree[v].p;
+				size_t sonid = s->getson(nw, v);
 				if (sonid == s->tree[nw].sons.size() - 1) {
 					v = s->tree[v].p;
 					continue;
@@ -124,7 +128,7 @@ public:
 				v = s->tree.size();
 				return *this;
 			}
-			int sonid = s->getson(nw, v);
+			size_t sonid = s->getson(nw, v);
 			++sonid;
 			v = s->tree[nw].sons[sonid];
 			while (s->tree[v].sons.size()) {
@@ -135,20 +139,22 @@ public:
 		iterator& operator--() {
 			if (v == s->tree.size()) {
 				v = s->root;
-				while (s->tree[v].sons.size()) v = s->tree[v].sons.back();
+				while (s->tree[v].sons.size()) {
+					v = s->tree[v].sons.back();
+				}
 				return *this;
 			}
 			while (v != s->root) {
-				int nw = s->tree[v].p;
-				int sonid = s->getson(nw, v);
+				size_t nw = s->tree[v].p;
+				size_t sonid = s->getson(nw, v);
 				if (sonid == 0) {
 					v = s->tree[v].p;
 					continue;
 				}
 				break;
 			}
-			int nw = s->tree[v].p;
-			int sonid = s->getson(nw, v);
+			size_t nw = s->tree[v].p;
+			size_t sonid = s->getson(nw, v);
 			--sonid;
 			v = s->tree[nw].sons[sonid];
 			while (s->tree[v].sons.size()) {
@@ -160,20 +166,22 @@ public:
 			auto to_ret = *this;
 			if (v == s->tree.size()) {
 				v = s->root;
-				while (s->tree[v].sons.size()) v = s->tree[v].sons.back();
+				while (s->tree[v].sons.size()) {
+					v = s->tree[v].sons.back();
+				}
 				return to_ret;
 			}
 			while (v != s->root) {
-				int nw = s->tree[v].p;
-				int sonid = s->getson(nw, v);
+				size_t nw = s->tree[v].p;
+				size_t sonid = s->getson(nw, v);
 				if (sonid == 0) {
 					v = s->tree[v].p;
 					continue;
 				}
 				break;
 			}
-			int nw = s->tree[v].p;
-			int sonid = s->getson(nw, v);
+			size_t nw = s->tree[v].p;
+			size_t sonid = s->getson(nw, v);
 			--sonid;
 			v = s->tree[nw].sons[sonid];
 			while (s->tree[v].sons.size()) {
@@ -184,8 +192,8 @@ public:
 		iterator operator++(int) {
 			auto to_ret = *this;
 			while (v != s->root) {
-				int nw = s->tree[v].p;
-				int sonid = s->getson(nw, v);
+				size_t nw = s->tree[v].p;
+				size_t sonid = s->getson(nw, v);
 				if (sonid == s->tree[nw].sons.size() - 1) {
 					v = s->tree[v].p;
 					continue;
@@ -197,7 +205,7 @@ public:
 				v = s->tree.size();
 				return to_ret;
 			}
-			int sonid = s->getson(nw, v);
+			size_t sonid = s->getson(nw, v);
 			if (sonid == s->tree[nw].sons.size()) {
 				v = s->tree.size();
 				return to_ret;
@@ -223,7 +231,9 @@ public:
 		return Set::iterator(tree.size(), this);
 	}
 	Set::iterator begin() const {
-		if (root == -1) return end();
+		if (root == -1) {
+			return end();
+		}
 		Set::iterator it(root, this);
 		while (tree[it.v].sons.size()) {
 			it.v = tree[it.v].sons[0];
@@ -241,7 +251,9 @@ public:
 	}
 	Set::iterator search(ValueType val) const {
 		int v = root;
-		if (root == -1) return end();
+		if (root == -1) {
+			return end();
+		}
 		while (tree[v].sons.size()) {
 			if (tree[v].sons.size() == 2) {
 				if (tree[v].keys[0].second < val) {
@@ -251,8 +263,12 @@ public:
 					v = tree[v].sons[0];
 				}
 			}
-			else if (tree[v].keys[1].second < val) v = tree[v].sons[2];
-			else if (tree[v].keys[0].second < val) v = tree[v].sons[1];
+			else if (tree[v].keys[1].second < val) {
+				v = tree[v].sons[2];
+			}
+			else if (tree[v].keys[0].second < val) {
+				v = tree[v].sons[1];
+			}
 			else v = tree[v].sons[0];
 		}
 		return Set::iterator(v, this);
@@ -265,7 +281,9 @@ public:
 		return res;
 	}
 	void split(int v) {
-		if (tree[v].sons.size() <= 3) return;
+		if (tree[v].sons.size() <= 3) {
+			return;
+		}
 		node nw = node();
 		nw.sons = { tree[v].sons[2], tree[v].sons[3] };
 		nw.keys = { tree[v].keys[2], tree[v].keys[3] };
@@ -318,7 +336,7 @@ public:
 			return;
 		}
 		++sz;
-		int v = it.v;
+		size_t v = it.v;
 		if (tree[v].p == -1) {
 			root = tree.size() - 1;
 			tree.pbc(nw);
@@ -348,13 +366,15 @@ public:
 		recalc(tree.size() - 1);
 	}
 	Set::iterator lower_bound(const ValueType& val) const {
-		if (root == -1) return end();
-		int v = root;
+		if (root == -1) {
+			return end();
+		}
+		size_t v = root;
 		if (tree[v].val.second < val) {
 			return end();
 		}
 		while (tree[v].sons.size()) {
-			for (int j = 0; j < 3; ++j) {
+			for (size_t j = 0; j < 3; ++j) {
 				if (equal(tree[v].keys[j].second, val) || val < tree[v].keys[j].second) {
 					v = tree[v].sons[j];
 					break;
@@ -363,12 +383,14 @@ public:
 		}
 		return Set::iterator(v, this);
 	}
-	int getbrother(int v, int son) const {
+	int getbrother(size_t v, size_t son) const {
 		if (tree[v].sons.size() == 2) {
 			return tree[v].sons[0] ^ tree[v].sons[1] ^ son;
 		}
 		else {
-			if (tree[v].sons[1] == son) return tree[v].sons[2];
+			if (tree[v].sons[1] == son) {
+				return tree[v].sons[2];
+			}
 			return tree[v].sons[1];
 		}
 	}
@@ -381,7 +403,7 @@ public:
 			return 0;
 		}
 		int p = tree[x.v].p;
-		int v = x.v;
+		size_t v = x.v;
 		if (tree[p].sons.size() == 3) {
 			tree[p].sons.erase(std::find(all(tree[p].sons), x.v));
 			recalc(p);
@@ -395,9 +417,9 @@ public:
 			tree[root].p = -1;
 			return 0;
 		}
-		int bro = (tree[p].sons[0] == x.v ? tree[p].sons[1] : tree[p].sons[0]);
-		int pp = tree[p].p;
-		int bruh = getbrother(pp, p);
+		size_t bro = (tree[p].sons[0] == x.v ? tree[p].sons[1] : tree[p].sons[0]);
+		size_t pp = tree[p].p;
+		size_t bruh = getbrother(pp, p);
 		tree[bruh].sons.pbc(bro);
 		std::sort(all(tree[bruh].sons), [&](int x, int y) {
 			return tree[x].val < tree[y].val;
@@ -419,12 +441,13 @@ public:
 			return;
 		}
 		--sz;
-		int bro = eraser(y);
-		if (bro < tree.size() && root != -1)
+		size_t bro = eraser(y);
+		if (bro < tree.size() && root != -1) {
 			recalc(bro);
+		}
 	}
 private:
 	std::vector<node> tree;
 	int root = -1;
-	int sz = 0;
+	size_t sz = 0;
 };
