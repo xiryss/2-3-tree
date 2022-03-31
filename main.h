@@ -178,7 +178,7 @@ public:
 				break;
 			}
 			size_t nw = s->tree[node_id].p;
-			size_t son_id = s->getson(nw, node_id;
+			size_t son_id = s->getson(nw, node_id);
 			--son_id;
 			node_id = s->tree[nw].sons[son_id];
 			while (s->tree[node_id].sons.size()) {
